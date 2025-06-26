@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+@theme{
+  --text-area:#CAF0F8;
+  --oscuro:#03045E;
+  --primario:#00B4D8;
+  --secundario:#90E0EF;
+  --fondo-claro:#F0FCFE;
+  --acento:#F5D819;
+}

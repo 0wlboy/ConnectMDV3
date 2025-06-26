@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import moongoosePaginate from "mongoose-paginate-v2"; //importar modulo paginacion
+import mongoosePaginate from "mongoose-paginate-v2"; //importar modulo paginacion
 import User from "./user.model.js";
 
 /**
@@ -106,7 +106,7 @@ const ContactSchema = new Schema(
   }
 );
 
-ContactSchema.plugin(moongoosePaginate); //add pagination
+ContactSchema.plugin(mongoosePaginate); //add pagination
 
 const Contact = mongoose.model("Contact", ContactSchema);
 

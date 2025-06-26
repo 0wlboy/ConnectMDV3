@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import moongoosePaginate from "mongoose-paginate-v2"; //importar modulo paginacion
+import mongoosePaginate from "mongoose-paginate-v2"; //importar modulo paginacion
 import User from "./user.model.js"
 
 
@@ -44,12 +44,12 @@ const profileVisitSchema = new Schema({
         ref: User,
         required: true
     },
-    delete:DeletedSchema
+    deleted:DeletedSchema
 },{
   timestamps: true
 });
 
-profileVisitSchema.plugin(moongoosePaginate); //implementar paginacion
+profileVisitSchema.plugin(mongoosePaginate); //implementar paginacion
 
 const ProfileVisit = mongoose.model('ProfileVisit', profileVisitSchema);
 
