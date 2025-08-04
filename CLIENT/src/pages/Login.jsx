@@ -16,22 +16,22 @@ const Login = () => {
             Iniciar Sesión
           </h2>
           <div>
-            <Label htmlFor="username" className="mb-2">
+            <Label htmlFor="username">
               Nombre de usuario
             </Label>
             <Input
-              icon={"../assets/ICONS/person.svg"}
+              icon={"FaUserAlt"}
               id="username"
               type="text"
               placeholder="tunombredeusuario"
             />
           </div>
           <div>
-            <Label htmlFor="password" className="mb-2">
+            <Label htmlFor="password">
               Contraseña
             </Label>
             <Input
-              icon={"../assets/ICONS/lock.svg"}
+              icon={"FaLock"}
               id="password"
               type="password"
               placeholder="••••••••"
@@ -43,7 +43,7 @@ const Login = () => {
             <Link>¿Olvidaste tu contraseña?</Link>
           </div>
           <div className="text-center">
-            <Link href={"/registerCliente"}>¿No tienes cuenta? Registrate</Link>
+            <Link href={"/RolPicker"}>¿No tienes cuenta? Registrate</Link>
           </div>
         </form>
       </div>

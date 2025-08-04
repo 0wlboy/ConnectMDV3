@@ -1,8 +1,8 @@
-const Links = ({ href, children, ...props }) => {
+const Links = ({ href, styles = "text-sm" , children, ...props }) => {
   return (
     <a
       href={href}
-      className="text-sm text-blue-600 cursor-pointer hover:underline "
+      className={`${styles} text-blue-600 cursor-pointer hover:underline `}
       {...props}
     >{children}</a>
   )

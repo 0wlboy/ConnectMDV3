@@ -1,23 +1,37 @@
-const Input = ({icon, id, type, placeholder, onChange, required = true }) => {
+import * as FontAwesome5 from "react-icons/fa";
+import * as FontAwesome6 from "react-icons/fa6";
+
+const Input = ({
+  icon,
+  id,
+  type,
+  placeholder,
+  onChange = null,
+  onKeyDown = null,
+  value = "",
+  required = true,
+}) => {
+  const Icon = icon ? FontAwesome5[icon] || FontAwesome6[icon] : null;
+
+  if (icon && !Icon) {
+    console.error(`Icon "${icon}" not found in react-icons/fa`);
+    return null;
+  }
+
   return (
     <div className="relative">
-      <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
-        <svg
-          className="w-4 h-4 text-blue-950"
-          aria-hidden="true"
-          xmlns={icon}
-          fill="currentColor"
-          viewBox="0 0 20 16"
-        >
-          <path d="m10.036 8.278 9.258-7.79A1.979 1.979 0 0 0 18 0H2A1.987 1.987 0 0 0 .641.541l9.395 7.737Z" />
-          <path d="M11.241 9.817c-.36.275-.801.425-1.255.427-.428 0-.845-.138-1.187-.395L0 2.6V14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2.5l-8.759 7.317Z" />
-        </svg>
-      </div>
+      {Icon && (
+        <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+          <Icon className="text-blue-950" />
+        </div>
+      )}
       <input
         id={id}
         type={type}
         onChange={onChange}
-        className="bg-blue-50 text-blue-950 text-sm font-semibold rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 "
+        onKeyDown={onKeyDown}
+        value={value}
+        className="bg-blue-100 text-blue-950 text-sm font-semibold rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 "
         placeholder={placeholder}
         required={required}
       />

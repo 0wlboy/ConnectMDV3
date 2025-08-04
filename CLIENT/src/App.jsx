@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import { useAuth } from "./components/context/AuthContext.jsx";
-import { MDList, Login, ClientRegister } from "./pages/exporter.js";
+import { MDList, Login, ClientRegister, RolPicker,  ProfRegister } from "./pages/exporter.js";
 
 function App() {
   const { isAuthenticated, userRole } = useAuth();
@@ -13,7 +13,9 @@ function App() {
         {!isAuthenticated && (
           <>
             <Route path="/login" element={<Login />} />
-            <Route path="/registerCliente" element={<ClientRegister />} />
+            <Route path="/clientRegister" element={<ClientRegister />} />
+            <Route path="/rolPicker" element={<RolPicker />} />
+            <Route path="/profRegister" element={<ProfRegister />} />
           </>
         )}
         {/* Rutas protegidas */}
