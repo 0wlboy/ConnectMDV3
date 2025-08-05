@@ -1,6 +1,7 @@
 import express, { json } from 'express'; //import express
 
 import cors from "cors"; //import cors
+import mongoose from 'mongoose';
 import './scheduler.js'
 import "./DATABASE/connection.js" //import connection to database
 import userRouter from "./ROUTES/user.route.js" //import routes users
@@ -16,7 +17,10 @@ import MongoStore from 'connect-mongo'; //import MongoStore for session storage
 
 dotenv.config();
 
-
+// Para suprimir la advertencia de desaprobación de Mongoose.
+// Se recomienda establecerlo en `true` para mantener el comportamiento actual de Mongoose 6.
+// O establécelo en `false` para optar por el nuevo comportamiento de Mongoose 7.
+mongoose.set('strictQuery', true);
 
 const app = express(); // Create server with express
 const PORT = process.env.PORT || 3001;
