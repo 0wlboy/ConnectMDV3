@@ -1,21 +1,21 @@
-import React, { useEffect, useRef, useState } from 'react';
-import maplibregl from 'maplibre-gl';
-import 'maplibre-gl/dist/maplibre-gl.css';
+import React, { useEffect, useRef, useState } from "react";
+import maplibregl from "maplibre-gl";
+import "maplibre-gl/dist/maplibre-gl.css";
 
 const MapComponent = () => {
   const mapContainer = useRef(null);
   const map = useRef(null);
-  const [lng] = useState(-70.9);
-  const [lat] = useState(42.35);
-  const [zoom] = useState(9);
+  const [lng] = useState(-62.75);
+  const [lat] = useState(8.35);
+  const [zoom] = useState(12);
 
   useEffect(() => {
     if (map.current) return; // initialize map only once
     map.current = new maplibregl.Map({
       container: mapContainer.current,
-      style: `https://demotiles.maplibre.org/style.json`,
+      style: `https://api.maptiler.com/maps/aquarelle/style.json?key=onNOZeRa8h6WlgkoOiT9`,
       center: [lng, lat],
-      zoom: zoom
+      zoom: zoom,
     });
   });
 

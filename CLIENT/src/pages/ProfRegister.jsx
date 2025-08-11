@@ -8,13 +8,20 @@ import {
   SelectInput,
   Textarea,
 } from "../components/ui/exporter.js";
+import { Modal, MapComponent } from "../components/tools/exporter.js";
 import { useNavigate } from "react-router-dom";
-import { FaFaceSmile, FaLocationDot, FaBuilding } from "react-icons/fa6";
+import {
+  FaFaceSmile,
+  FaLocationDot,
+  FaBuilding,
+  FaLessThanEqual,
+} from "react-icons/fa6";
 import { FaPlusCircle, FaTrashAlt } from "react-icons/fa";
 
 export default function ProfRegister() {
   const navigate = useNavigate();
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [officeAddresses, setOfficeAddresses] = useState([]);
   const [currentOfficeAddress, setCurrentOfficeAddress] = useState("");
   const [officePhotos, setOfficePhotos] = useState([]);
@@ -32,6 +39,11 @@ export default function ProfRegister() {
     ubicacionExacta: false,
     descripcion: "",
   });
+
+  const actionModal = () => {
+    console.log("Toggling modal state. Current state:", isModalOpen);
+    setIsModalOpen(!isModalOpen);
+  };
 
   const validate = () => {
     let tempErrors = {};
@@ -358,11 +370,8 @@ export default function ProfRegister() {
                   />
                   <Button
                     type="button"
-                    onClick={addOfficeAddress}
-                    disabled={
-                      officeAddresses.length >= 3 ||
-                      !currentOfficeAddress.trim()
-                    }
+                    onClick={actionModal}
+                    disabled={officeAddresses.length >= 3}
                     className="relative flex items-center justify-center cursor-pointer py-1 px-3 text-sm"
                   >
                     <FaPlusCircle className="h-4 w-4 mr-2" />
@@ -447,6 +456,12 @@ export default function ProfRegister() {
             </div>
           </form>
         </div>
+        {isModalOpen && (
+          <Modal isOpen={isModalOpen} onClose={actionModal}>
+            <MapComponent>
+            </MapComponent>
+          </Modal>
+        )}
       </div>
     </>
   );
