@@ -348,58 +348,17 @@ export default function ProfRegister() {
                   />
                 </div>
               </div>
-
+            </div>
+            <div>
+              <Label htmlFor="oficina">
+                Dirección de tus oficinas. Máximo 3
+              </Label>
               <div>
-                <Label htmlFor="oficina">
-                  Dirección de tus oficinas. Máximo 3
-                </Label>
-                <div className="flex items-center gap-2">
-                  <Input
-                    icon={FaBuilding}
-                    id="oficina"
-                    type="text"
-                    placeholder="oficina o consultorio"
-                    value={currentOfficeAddress}
-                    onChange={(e) => setCurrentOfficeAddress(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        addOfficeAddress();
-                      }
-                    }}
-                  />
-                  <Button
-                    type="button"
-                    onClick={actionModal}
-                    disabled={officeAddresses.length >= 3}
-                    className="relative flex items-center justify-center cursor-pointer py-1 px-3 text-sm"
-                  >
-                    <FaPlusCircle className="h-4 w-4 mr-2" />
-                    Agregar Direccion
-                  </Button>
-                </div>
-                <div className="mt-2 space-y-2">
-                  {officeAddresses.map((address, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between p-2 bg-gray-200 rounded-md border border-gray-300"
-                    >
-                      <FaLocationDot className="text-gray-600 mr-2" />
-                      <span className="flex-grow text-gray-800">{address}</span>
-                      <FaTrashAlt
-                        className="text-red-500 cursor-pointer hover:text-red-700"
-                        onClick={() =>
-                          setOfficeAddresses(
-                            officeAddresses.filter((_, i) => i !== index)
-                          )
-                        }
-                      />
-                    </div>
-                  ))}
-                </div>
+                <MapComponent
+                  
+                ></MapComponent>
               </div>
             </div>
-
             <div>
               <Label htmlFor="office-photos">Agregar fotos de oficina</Label>
               <Button
@@ -456,12 +415,6 @@ export default function ProfRegister() {
             </div>
           </form>
         </div>
-        {isModalOpen && (
-          <Modal isOpen={isModalOpen} onClose={actionModal}>
-            <MapComponent>
-            </MapComponent>
-          </Modal>
-        )}
       </div>
     </>
   );
