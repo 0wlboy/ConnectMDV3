@@ -123,7 +123,7 @@ function email({ recipient_email, OTP }) {
  * @example POST http://localhost:3001/users/register
  */
 export const createUser = async (req, res) => {
-  const { firstName, lastName, email, password, role, locations, profession } =
+  const { firstName, lastName, sex, birthDate, email, password, role, locations, residence, profession } =
     req.body;
 
   // Obtener rutas de archivos de req.files (poblado por multer)
@@ -135,14 +135,18 @@ export const createUser = async (req, res) => {
     const user = new User({
       firstName,
       lastName,
+      sex,
+      birthDate,
       email,
       password,
       role,
       profilePicture: profilePicturePath, // Guardar la ruta del archivo
+      residence,
       locations,
       profession,
       officePictures: officePicturesPaths, // Guardar las rutas de los archivos
     });
+    console.log(user);
     await user.save();
     res.status(201).json({ message: "Usuario creado con éxito" });
   } catch (error) {
@@ -175,6 +179,9 @@ export const getAllUsers = async (req, res) => {
     firstName,
     lastName,
     role,
+    sex,
+    residence,
+    birthDate,
     profession,
     page = 1,
     limit = 10,
@@ -195,6 +202,16 @@ export const getAllUsers = async (req, res) => {
   if (profession) {
     query.profession = profession;
   }
+   if (sex) {
+    query.sex = sex;
+  }
+   if (residence) {
+    query.residence = residence;
+  }
+  if (birthDate) {
+    query.birthDate = birthDate;
+  }
+  
 
   //query["deleted.isDeleted"] = false;
 
@@ -334,11 +351,14 @@ export const updateUser = async (req, res) => {
     modifydBy,
     firstName,
     lastName,
+    sex,
+    birthDate,
     email,
     password,
     role,
     profilePicture,
     locations,
+    residence,
     profession,
     officePictures,
     strikes,
@@ -365,6 +385,8 @@ export const updateUser = async (req, res) => {
     // Actualizar campos si se proporcionan
     if (firstName !== undefined) userToUpdate.firstName = firstName;
     if (lastName !== undefined) userToUpdate.lastName = lastName;
+    if (sex !== undefined) userToUpdate.sex = sex;
+    if (birthDate !== undefined) userToUpdate.birthDate = birthDate;
     if (email !== undefined) userToUpdate.email = email.toLowerCase(); // Normalizar email
     if (password) {
       // Si se proporciona una nueva contraseña, mongoose-bcrypt la hasheará automáticamente
@@ -375,6 +397,7 @@ export const updateUser = async (req, res) => {
     if (profilePicture !== undefined)
       userToUpdate.profilePicture = profilePicture;
     if (locations !== undefined) userToUpdate.locations = locations;
+    if (residence !== undefined) userToUpdate.residence = residence;
     if (profession !== undefined) userToUpdate.profession = profession;
     if (officePictures !== undefined)
       userToUpdate.officePictures = officePictures;

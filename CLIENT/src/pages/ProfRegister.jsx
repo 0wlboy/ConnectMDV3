@@ -8,7 +8,7 @@ import {
   SelectInput,
   Textarea,
 } from "../components/ui/exporter.js";
-import { Modal, MapComponent } from "../components/tools/exporter.js";
+import { Modal, MapView } from "../components/tools/exporter.js";
 import { useNavigate } from "react-router-dom";
 import {
   FaFaceSmile,
@@ -20,8 +20,7 @@ import { FaPlusCircle, FaTrashAlt } from "react-icons/fa";
 
 export default function ProfRegister() {
   const navigate = useNavigate();
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  
   const [officeAddresses, setOfficeAddresses] = useState([]);
   const [currentOfficeAddress, setCurrentOfficeAddress] = useState("");
   const [officePhotos, setOfficePhotos] = useState([]);
@@ -40,10 +39,16 @@ export default function ProfRegister() {
     descripcion: "",
   });
 
-  const actionModal = () => {
-    console.log("Toggling modal state. Current state:", isModalOpen);
-    setIsModalOpen(!isModalOpen);
-  };
+  const coordenadasCercanas = [
+  // 1. Plaza Venezuela (centro de Caracas)
+  { lat: 10.4881, lng: -66.8792 },
+
+  // 2. Parque Central (complejo urbanístico y comercial)
+  { lat: 10.4961, lng: -66.8933 },
+
+  // 3. Universidad Central de Venezuela (Patrimonio de la Humanidad)
+  { lat: 10.4828, lng: -66.8919 }
+];
 
   const validate = () => {
     let tempErrors = {};
@@ -354,9 +359,12 @@ export default function ProfRegister() {
                 Dirección de tus oficinas. Máximo 3
               </Label>
               <div>
-                <MapComponent
-                  
-                ></MapComponent>
+                <MapView  
+                  lat={coordenadasCercanas[0].lat}
+                  lng={coordenadasCercanas[0].lng}
+                  addresses={coordenadasCercanas}
+                  interactive = {true}
+                ></MapView>
               </div>
             </div>
             <div>

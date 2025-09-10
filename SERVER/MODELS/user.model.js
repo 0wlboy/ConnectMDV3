@@ -75,7 +75,10 @@ const HistoricalPassword = new Schema({
  * @property {string} email - The user's email address. Must be unique, required, and match email format. Trimmed and lowercased.
  * @property {string} firstName - The user's first name.
  * @property {string} lastName - The user's last name.
+ * @property {date} BirthDate - The user's date of birth.
+ * @property {string} sex - The user's sex
  * @property {string} profilePicture - URL or path to the user's profile picture.
+ * @protecty {string} residence - The user's place of residence.
  * @property {Array<Object>} locations - An array of user's locations (e.g., office addresses).
  * @property {string} password - The user's hashed password. Required and must meet complexity requirements (handled by mongoose-bcrypt).
  * @property {string} role - The user's role within the system. Required. Must be one of 'cliente', 'prof', or 'admin'.
@@ -115,9 +118,28 @@ const UserSchema = new Schema({
     match: [nameRegex, 'El apellido solo puede contener letras y espacios.'],
     trim: true,
   },
+  sex : {
+    type: String, 
+    required: true
+  },
+ birthDate: {
+  type: Date,
+  required: true,
+  set: function(value) {
+    // Normaliza cualquier fecha ingresada a solo año, mes y día
+    const date = new Date(value);
+    date.setHours(0, 0, 0, 0);
+    return date;
+  }
+},
+
   profilePicture: {
     type: String,
-    required: [true, 'La foto de perfil es requerida.'],
+    //required: [true, 'La foto de perfil es requerida.'],
+  },
+  residence: {
+    type: String, 
+    required: true,
   },
   locations: [{
     address: {
@@ -196,66 +218,72 @@ const UserSchema = new Schema({
 UserSchema.plugin(mongoosePaginate); // Adds pagination capabilities
 UserSchema.plugin(mongooseBcrypt); // Handles password hashing automatically
 
-// --- Middleware for Password History ---
+// --- Virtual Field for Age ---
+UserSchema.virtual('age').get(function() {
+  if (!this.birthDate) return null;
+  const today = new Date();
+  const birthDate = new Date(this.birthDate);
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+  // Adjust age if birthday hasn't occurred yet this year
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+});
+
+// Asegúrate de incluir el campo virtual en la salida JSON
+UserSchema.set('toJSON', { virtuals: true });
+UserSchema.set('toObject', { virtuals: true });
+
+
+// --- Middleware ---
 UserSchema.pre('save', async function (next) {
-  // Only run if password was modified and it's not a new document
+  // --- Password History ---
   if (this.isModified('password') && !this.isNew) {
     try {
       // Fetch the document *before* the save to get the old password hash
       const userBeforeSave = await this.constructor.findById(this._id).select('password').lean();
 
       if (userBeforeSave && userBeforeSave.password) {
-        // Add the PREVIOUS password to the beginning of the history array
         this.passwordHistory.unshift({
           password: userBeforeSave.password,
           changedAt: new Date() // Record the time of change
         });
 
-        // Keep only the latest 3 passwords in history
         this.passwordHistory = this.passwordHistory.slice(0, 3);
       }
     } catch (error) {
       console.error('Error updating password history:', error);
-      // Decide if the save operation should be stopped:
-      // next(error);
+      // Consider if you should halt the save operation on error
+      // return next(error);
     }
   }
-  next(); // Continue the save operation
-});
 
-// --- Middleware to Increment Login Count ---
-UserSchema.pre('save', async function (next) {
+  // --- Increment Login Count ---
   if (this.isModified('lastLogin') && this.lastLogin !== null) {
     this.totalLoginCount = (this.totalLoginCount || 0) + 1;
   }
-  next(); // Continue the save operation
-});
 
-// --- Middleware to Limit Login History ---
-UserSchema.pre('save', function (next) {
-  // Check if historicalLogins exists and exceeds the limit
+  // --- Limit Login History ---
   if (this.historicalLogins && this.historicalLogins.length > 5) {
-    // Keep only the last 5 login records (most recent)
     this.historicalLogins = this.historicalLogins.slice(-5);
   }
-  next(); // Continue the save operation
-});
 
-// --- Middleware for oldData ---
-UserSchema.pre('save', async function(next) {
+  // --- oldData Snapshot ---
   if (!this.isNew) {
     try {
       const oldDoc = await this.constructor.findById(this._id).lean();
       if (oldDoc) {
-        delete oldDoc.oldData; 
-        delete oldDoc.passwordHistory; 
-        delete oldDoc.historicalLogins; 
-        delete oldDoc._id; 
-        delete oldDoc.createdAt; 
+        delete oldDoc.oldData;
+        delete oldDoc.passwordHistory;
+        delete oldDoc.historicalLogins;
+        delete oldDoc._id;
+        delete oldDoc.createdAt;
         delete oldDoc.updatedAt;
-        delete oldDoc.password; 
+        delete oldDoc.password;
 
-        this.oldData = oldDoc;
+ this.oldData = oldDoc;
       } else {
         this.oldData = {};
       }
@@ -264,7 +292,8 @@ UserSchema.pre('save', async function(next) {
       this.oldData = { error: 'Fallo al capturar estado previo' };
     }
   }
-  next(); 
+
+  next(); // Continue with the save operation
 });
 
 // --- Model Export ---
