@@ -1,80 +1,102 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Map, Marker, NavigationControl } from "maplibre-gl";
-import "maplibre-gl/dist/maplibre-gl.css";
-//import axios from "axios";
-//import debounce from "lodash.debounce";
+import * as maptilersdk from "@maptiler/sdk";
+import "@maptiler/sdk/dist/maptiler-sdk.css";
+import { GeocodingControl } from "@maptiler/geocoding-control/maptilersdk";
+import "@maptiler/geocoding-control/style.css";
 
 const MapComponent = ({
   lng: initialLng = -66.8656,
   lat: initialLat = 10.4806,
   interactive = true,
   addresses = [],
+  onAddresseChange,
 }) => {
+  maptilersdk.config.apiKey = import.meta.env.VITE_MAPTILER_API_KEY;
   const mapContainer = useRef(null);
   const [map, setMap] = useState(null);
-  const [lng, setLng] = useState(initialLng); // Longitud de Caracas
-  const [lat, setLat] = useState(initialLat); // Latitud de Caracas
-  const [zoom, setZoom] = useState(12);
   const markers = useRef([]);
 
-  // Inicializar el mapa
   useEffect(() => {
-    if (!mapContainer.current || map) return;
+    if (!mapContainer.current) return;
 
-    const newMap = new Map({
-      container: mapContainer.current,
-      style: `https://api.maptiler.com/maps/streets/style.json?key=l46c5JKjM2eZKiqNHWHe`,
-      center: [lng, lat],
-      zoom: zoom,
-      interactive,
-      dragPan: interactive,
-      scrollZoom: interactive,
-      doubleClickZoom: interactive,
-      touchZoomRotate: interactive,
-    });
+    try {
+      const newMap = new maptilersdk.Map({
+        container: mapContainer.current,
+        style: maptilersdk.MapStyle.STREETS,
+        center: [initialLng, initialLat],
+        zoom: 12,
+        interactive,
+        dragPan: interactive,
+        scrollZoom: interactive,
+        doubleClickZoom: interactive,
+        touchZoomRotate: interactive,
+      });
 
-    // Guarda el mapa en el estado
-    setMap(newMap);
+      setMap(newMap);
 
-    // Añade controles de navegación (zoom y rotación)
-    if (interactive){
-      newMap.addControl(new NavigationControl(), "top-right");
+      if (interactive) {
 
-      // Actualiza el estado cuando el mapa se mueve
-    newMap.on("move", () => {
-      setLng(newMap.getCenter().lng.toFixed(4));
-      setLat(newMap.getCenter().lat.toFixed(4));
-      setZoom(newMap.getZoom().toFixed(2));
-    });
+        // Añadir control de geocodificación
+        const gc = new GeocodingControl({
+          apiKey: import.meta.env.VITE_MAPTILER_API_KEY,
+          limit: 3,
+          country: "ve",
+          types: ["address"],
+        });
+
+        newMap.addControl(gc, "top-left");
+
+        // Evento para añadir marcadores al hacer clic en el mapa
+        newMap.on("click", (e) => {
+          if (addresses.length >= 3) {
+            alert("Solo se permiten 3 oficinas.");
+            return;
+          }
+          const { lng, lat } = e.lngLat;
+          const newMarker = new maptilersdk.Marker({ color: "#F5D819" })
+            .setLngLat([lng, lat])
+            .addTo(newMap);
+          markers.current.push(newMarker);
+          const newAddresses = [...addresses, { lat, lng }];
+          if (onAddresseChange) {
+            onAddresseChange(newAddresses);
+          }
+        });
+      }
+
+      return () => {
+        if (newMap) newMap.remove();
+      };
+    } catch (error) {
+      console.error("Error al inicializar el mapa:", error);
     }
-    
-
-    
-
-    return () => {
-      if (newMap) newMap.remove();
-    };
-  }, [interactive]);
+  }, []);
 
   useEffect(() => {
     if (!map || !addresses.length) return;
 
-    // Limpiar marcadores anteriores
-    markers.current.forEach((marker) => marker.remove());
-    markers.current = [];
+    try {
+      markers.current.forEach((marker) => {
+        if (marker) marker.remove();
+      });
+      markers.current = [];
 
-    // Añadir nuevos marcadores
-    addresses.forEach((coord) => {
-      const marker = new Marker({ color: "#3FB1CE" })
-        .setLngLat([coord.lng, coord.lat])
-        .addTo(map);
-      markers.current.push(marker); // Guarda el marcador para limpieza posterior
-    });
-  }, [map, addresses]); // Solo se ejecuta cuando el mapa o las direcciones cambian
+      addresses.forEach((coord) => {
+        if (coord && coord.lat !== undefined && coord.lng !== undefined) {
+          const marker = new maptilersdk.Marker({ color: "#F5D819" })
+            .setLngLat([coord.lng, coord.lat])
+            .addTo(map);
+          markers.current.push(marker);
+        }
+      });
+    } catch (error) {
+      console.error("Error al agregar marcadores:", error);
+    }
+  }, [map, addresses]);
 
   return (
-    <div className="container mx-auto p-4">
-      <div ref={mapContainer} className="map-container w-full h-96" />
+    <div className="w-full h-96 rounded-lg overflow-hidden border border-gray-200">
+      <div ref={mapContainer} className="w-full h-full" />
     </div>
   );
 };

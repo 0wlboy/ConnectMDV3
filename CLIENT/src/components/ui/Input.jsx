@@ -1,5 +1,7 @@
 import * as FontAwesome5 from "react-icons/fa";
 import * as FontAwesome6 from "react-icons/fa6";
+import * as FontAwesomeMd from "react-icons/md";
+import * as FontAwesomeIm from "react-icons/im";
 
 const Input = ({
   icon,
@@ -11,7 +13,7 @@ const Input = ({
   value = "",
   required = true,
 }) => {
-  const Icon = icon ? FontAwesome5[icon] || FontAwesome6[icon] : null;
+  const Icon = icon ? FontAwesome5[icon] || FontAwesome6[icon] || FontAwesomeIm[icon] || FontAwesomeMd[icon] : null;
 
   if (icon && !Icon) {
     console.error(`Icon "${icon}" not found in react-icons/fa`);
