@@ -9,7 +9,7 @@ const MapComponent = ({
   lat: initialLat = 10.4806,
   interactive = true,
   addresses = [],
-  onAddresseChange,
+  onAddressesChange,
 }) => {
   maptilersdk.config.apiKey = import.meta.env.VITE_MAPTILER_API_KEY;
   const mapContainer = useRef(null);
@@ -58,8 +58,8 @@ const MapComponent = ({
             .addTo(newMap);
           markers.current.push(newMarker);
           const newAddresses = [...addresses, { lat, lng }];
-          if (onAddresseChange) {
-            onAddresseChange(newAddresses);
+          if (onAddressesChange) {
+            onAddressesChange(newAddresses);
           }
         });
       }
@@ -73,14 +73,16 @@ const MapComponent = ({
   }, []);
 
   useEffect(() => {
-    if (!map || !addresses.length) return;
+    if (!map) return;
 
     try {
+      // Limpiar marcadores anteriores
       markers.current.forEach((marker) => {
         if (marker) marker.remove();
       });
       markers.current = [];
 
+      // Añadir nuevos marcadores
       addresses.forEach((coord) => {
         if (coord && coord.lat !== undefined && coord.lng !== undefined) {
           const marker = new maptilersdk.Marker({ color: "#F5D819" })

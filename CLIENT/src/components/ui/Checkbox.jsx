@@ -1,8 +1,9 @@
-const Checkbox = ({ label, checked, onChange }) => {
+const Checkbox = ({id, label, checked, onChange }) => {
   return (
     <div className="flex items-center mb-4">
       <div className="flex items-center h-5">
         <input
+        id={id}
         type="checkbox"
         checked={checked}
         onChange={onChange}
@@ -10,7 +11,7 @@ const Checkbox = ({ label, checked, onChange }) => {
       />
       </div>
       
-      <label className="ml-2 text-sm font-semibold text-blue-950">
+      <label htmlFor={id} className="ml-2 text-sm font-semibold text-blue-950">
         {label}
       </label>
     </div>
