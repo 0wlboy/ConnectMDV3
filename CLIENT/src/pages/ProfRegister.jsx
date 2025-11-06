@@ -14,6 +14,7 @@ import { FaFaceSmile, FaLocationDot, FaBuilding } from "react-icons/fa6";
 import { FaPlusCircle, FaTrashAlt } from "react-icons/fa";
 
 export default function ProfRegister() {
+
   const navigate = useNavigate();
 
   const [officeAddresses, setOfficeAddresses] = useState([]);
@@ -37,81 +38,81 @@ export default function ProfRegister() {
   });
 
   const estadosVenezuela = [
-  { value: "Distrito Capital", label: "Distrito Capital" },
-  { value: "Amazonas", label: "Amazonas" },
-  { value: "Anzoátegui", label: "Anzoátegui" },
-  { value: "Apure", label: "Apure" },
-  { value: "Aragua", label: "Aragua" },
-  { value: "Barinas", label: "Barinas" },
-  { value: "Bolívar", label: "Bolívar" },
-  { value: "Carabobo", label: "Carabobo" },
-  { value: "Cojedes", label: "Cojedes" },
-  { value: "Delta Amacuro", label: "Delta Amacuro" },
-  { value: "Falcón", label: "Falcón" },
-  { value: "Guárico", label: "Guárico" },
-  { value: "Lara", label: "Lara" },
-  { value: "Mérida", label: "Mérida" },
-  { value: "Miranda", label: "Miranda" },
-  { value: "Monagas", label: "Monagas" },
-  { value: "Nueva Esparta", label: "Nueva Esparta" },
-  { value: "Portuguesa", label: "Portuguesa" },
-  { value: "Sucre", label: "Sucre" },
-  { value: "Táchira", label: "Táchira" },
-  { value: "Trujillo", label: "Trujillo" },
-  { value: "Vargas", label: "Vargas" },
-  { value: "Yaracuy", label: "Yaracuy" },
-  { value: "Zulia", label: "Zulia" },
-  { value: "Dependencias Federales", label: "Dependencias Federales" }
-];
+    { value: "Distrito Capital", label: "Distrito Capital" },
+    { value: "Amazonas", label: "Amazonas" },
+    { value: "Anzoátegui", label: "Anzoátegui" },
+    { value: "Apure", label: "Apure" },
+    { value: "Aragua", label: "Aragua" },
+    { value: "Barinas", label: "Barinas" },
+    { value: "Bolívar", label: "Bolívar" },
+    { value: "Carabobo", label: "Carabobo" },
+    { value: "Cojedes", label: "Cojedes" },
+    { value: "Delta Amacuro", label: "Delta Amacuro" },
+    { value: "Falcón", label: "Falcón" },
+    { value: "Guárico", label: "Guárico" },
+    { value: "Lara", label: "Lara" },
+    { value: "Mérida", label: "Mérida" },
+    { value: "Miranda", label: "Miranda" },
+    { value: "Monagas", label: "Monagas" },
+    { value: "Nueva Esparta", label: "Nueva Esparta" },
+    { value: "Portuguesa", label: "Portuguesa" },
+    { value: "Sucre", label: "Sucre" },
+    { value: "Táchira", label: "Táchira" },
+    { value: "Trujillo", label: "Trujillo" },
+    { value: "Vargas", label: "Vargas" },
+    { value: "Yaracuy", label: "Yaracuy" },
+    { value: "Zulia", label: "Zulia" },
+    { value: "Dependencias Federales", label: "Dependencias Federales" },
+  ];
 
-const profesionesMedicas = [
-  { value: "Medico General", label: "Médico General" },
-  { value: "Cardiologo", label: "Cardiólogo" },
-  { value: "Dermatologo", label: "Dermatólogo" },
-  { value: "Endocrinologo", label: "Endocrinólogo" },
-  { value: "Gastroenterologo", label: "Gastroenterólogo" },
-  { value: "Ginecologo", label: "Ginecólogo" },
-  { value: "Hematologo", label: "Hematólogo" },
-  { value: "Infectologo", label: "Infectólogo" },
-  { value: "Nefrologo", label: "Nefrólogo" },
-  { value: "Neumologo", label: "Neumólogo" },
-  { value: "Neurologo", label: "Neurólogo" },
-  { value: "Oftalmologo", label: "Oftalmólogo" },
-  { value: "Oncologo", label: "Oncólogo" },
-  { value: "Otorrinolaringologo", label: "Otorrinolaringólogo" },
-  { value: "Pediatra", label: "Pediatra" },
-  { value: "Psiquiatra", label: "Psiquiatra" },
-  { value: "Reumatólogo", label: "Reumatólogo" },
-  { value: "Traumatólogo", label: "Traumatólogo" },
-  { value: "Urologo", label: "Urólogo" },
-  { value: "Odontologo", label: "Odontólogo" },
-  { value: "Cirujano General", label: "Cirujano General" },
-  { value: "Cirujano Plastico", label: "Cirujano Plástico" },
-  { value: "Cirujano Cardiovascular", label: "Cirujano Cardiovascular" },
-  { value: "Cirujano Maxilofacial", label: "Cirujano Maxilofacial" },
-  { value: "Cirujano Pediatrico", label: "Cirujano Pediátrico" },
-  { value: "Anestesiólogo", label: "Anestesiólogo" },
-  { value: "Radiologo", label: "Radiólogo" },
-  { value: "Nutricionista", label: "Nutricionista" },
-  { value: "Fisiatra", label: "Fisiatra" },
-  { value: "Geriatra", label: "Geriatra" },
-  { value: "Hemato-Oncologo", label: "Hemato-Oncólogo" },
-  { value: "Medico Deportivo", label: "Médico Deportivo" },
-  { value: "Medico del Trabajo", label: "Médico del Trabajo" },
-  { value: "Medico Estetico", label: "Médico Estético" },
-  { value: "Medico Familiar", label: "Médico Familiar" },
-  { value: "Medico Forense", label: "Médico Forense" },
-  { value: "Medico Internista", label: "Médico Internista" },
-  { value: "Psicologo Clinico", label: "Psicólogo Clínico" },
-  { value: "Neurocirujano", label: "Neurocirujano" },
-  { value: "Proctologo", label: "Proctólogo" },
-  { value: "Foniatra", label: "Foniatra" },
-  { value: "Genetista", label: "Genetista" },
-  { value: "Inmunologo", label: "Inmunólogo" },
-  { value: "Medico Intensivista", label: "Médico Intensivista" },
-  { value: "Neuroradiologo", label: "Neurorradiólogo" },
-  { value: "Patologo", label: "Patólogo" }
-];
+  const profesionesMedicas = [
+    { value: "Medico General", label: "Médico General" },
+    { value: "Cardiologo", label: "Cardiólogo" },
+    { value: "Dermatologo", label: "Dermatólogo" },
+    { value: "Endocrinologo", label: "Endocrinólogo" },
+    { value: "Gastroenterologo", label: "Gastroenterólogo" },
+    { value: "Ginecologo", label: "Ginecólogo" },
+    { value: "Hematologo", label: "Hematólogo" },
+    { value: "Infectologo", label: "Infectólogo" },
+    { value: "Nefrologo", label: "Nefrólogo" },
+    { value: "Neumologo", label: "Neumólogo" },
+    { value: "Neurologo", label: "Neurólogo" },
+    { value: "Oftalmologo", label: "Oftalmólogo" },
+    { value: "Oncologo", label: "Oncólogo" },
+    { value: "Otorrinolaringologo", label: "Otorrinolaringólogo" },
+    { value: "Pediatra", label: "Pediatra" },
+    { value: "Psiquiatra", label: "Psiquiatra" },
+    { value: "Reumatólogo", label: "Reumatólogo" },
+    { value: "Traumatólogo", label: "Traumatólogo" },
+    { value: "Urologo", label: "Urólogo" },
+    { value: "Odontologo", label: "Odontólogo" },
+    { value: "Cirujano General", label: "Cirujano General" },
+    { value: "Cirujano Plastico", label: "Cirujano Plástico" },
+    { value: "Cirujano Cardiovascular", label: "Cirujano Cardiovascular" },
+    { value: "Cirujano Maxilofacial", label: "Cirujano Maxilofacial" },
+    { value: "Cirujano Pediatrico", label: "Cirujano Pediátrico" },
+    { value: "Anestesiólogo", label: "Anestesiólogo" },
+    { value: "Radiologo", label: "Radiólogo" },
+    { value: "Nutricionista", label: "Nutricionista" },
+    { value: "Fisiatra", label: "Fisiatra" },
+    { value: "Geriatra", label: "Geriatra" },
+    { value: "Hemato-Oncologo", label: "Hemato-Oncólogo" },
+    { value: "Medico Deportivo", label: "Médico Deportivo" },
+    { value: "Medico del Trabajo", label: "Médico del Trabajo" },
+    { value: "Medico Estetico", label: "Médico Estético" },
+    { value: "Medico Familiar", label: "Médico Familiar" },
+    { value: "Medico Forense", label: "Médico Forense" },
+    { value: "Medico Internista", label: "Médico Internista" },
+    { value: "Psicologo Clinico", label: "Psicólogo Clínico" },
+    { value: "Neurocirujano", label: "Neurocirujano" },
+    { value: "Proctologo", label: "Proctólogo" },
+    { value: "Foniatra", label: "Foniatra" },
+    { value: "Genetista", label: "Genetista" },
+    { value: "Inmunologo", label: "Inmunólogo" },
+    { value: "Medico Intensivista", label: "Médico Intensivista" },
+    { value: "Neuroradiologo", label: "Neurorradiólogo" },
+    { value: "Patologo", label: "Patólogo" },
+  ];
 
   /**
    * Valida los campos del formulario y establece los mensajes de error correspondientes.
@@ -200,8 +201,25 @@ const profesionesMedicas = [
    * Callback para actualizar las direcciones de oficina desde el componente MapComponent.
    */
   const addOfficeAddress = useCallback((newAddresses) => {
-    setOfficeAddresses(newAddresses);
-  }, []);
+    console.log("=== ANTES DE ACTUALIZAR ===");
+    console.log("Nuevas direcciones recibidas:", newAddresses);
+    console.log("Direcciones actuales:", officeAddresses);
+
+    if (newAddresses.length > 3) {
+      alert("Solo se permiten 3 oficinas máximo.");
+      return;
+    }
+
+    // ✅ Usar función para acceder al estado actual
+    setOfficeAddresses((prevAddresses) => {
+      console.log("=== DENTRO DEL SETTER ===");
+      console.log("Estado anterior real:", prevAddresses);
+      console.log("Nuevo estado:", newAddresses);
+      return newAddresses;
+    });
+
+   
+  }, []); // Mantener sin dependencias
 
   const handleRemoveAddress = (index) => {
     const updatedAddresses = [...officeAddresses];
@@ -251,7 +269,10 @@ const profesionesMedicas = [
         );
       }
     }
+    
   };
+
+  
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -496,7 +517,7 @@ const profesionesMedicas = [
             <div className="bg-white p-4 rounded-lg shadow-md">
               <MapComponent
                 addresses={officeAddresses}
-                onAddresseChange={addOfficeAddress}
+                onAddressesChange={addOfficeAddress}
                 interactive={true}
               />
               {errors.officeAddresses && (

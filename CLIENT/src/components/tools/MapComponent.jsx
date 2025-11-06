@@ -5,25 +5,28 @@ import { GeocodingControl } from "@maptiler/geocoding-control/maptilersdk";
 import "@maptiler/geocoding-control/style.css";
 
 const MapComponent = ({
-  lng: initialLng = -66.8656,
-  lat: initialLat = 10.4806,
+  lng = -66.8656,
+  lat = 10.4806,
   interactive = true,
   addresses = [],
   onAddressesChange,
 }) => {
+   console.log("🗺️ MapComponent render - addresses:", addresses, "length:", addresses.length);
   maptilersdk.config.apiKey = import.meta.env.VITE_MAPTILER_API_KEY;
   const mapContainer = useRef(null);
   const [map, setMap] = useState(null);
   const markers = useRef([]);
+  const mapRef = useRef(null);
+  const colorMarker = "#F5D819";
 
   useEffect(() => {
-    if (!mapContainer.current) return;
+    if (!mapContainer.current || mapRef.current) return; // Evitar múltiples instancias
 
     try {
       const newMap = new maptilersdk.Map({
         container: mapContainer.current,
         style: maptilersdk.MapStyle.STREETS,
-        center: [initialLng, initialLat],
+        center: [lng, lat],
         zoom: 12,
         interactive,
         dragPan: interactive,
@@ -32,45 +35,58 @@ const MapComponent = ({
         touchZoomRotate: interactive,
       });
 
-      setMap(newMap);
+      mapRef.current = newMap;
 
-      if (interactive) {
+      newMap.on("load", () => {
+        setMap(newMap);
 
-        // Añadir control de geocodificación
-        const gc = new GeocodingControl({
-          apiKey: import.meta.env.VITE_MAPTILER_API_KEY,
-          limit: 3,
-          country: "ve",
-          types: ["address"],
-        });
+        if (interactive) {
+          const gc = new GeocodingControl({
+            apiKey: import.meta.env.VITE_MAPTILER_API_KEY,
+            limit: 3,
+            country: "ve",
+            types: ["address"],
+          });
+          newMap.addControl(gc, "top-left");
 
-        newMap.addControl(gc, "top-left");
+          // Evento para añadir marcadores
+          const clickHandler = (e) => {
+            console.log("=== CLIC EN MAPA ===");
+            console.log("Direcciones actuales en mapa:", addresses);
+            console.log("Cantidad actual:", addresses.length);
 
-        // Evento para añadir marcadores al hacer clic en el mapa
-        newMap.on("click", (e) => {
-          if (addresses.length >= 3) {
-            alert("Solo se permiten 3 oficinas.");
-            return;
-          }
-          const { lng, lat } = e.lngLat;
-          const newMarker = new maptilersdk.Marker({ color: "#F5D819" })
-            .setLngLat([lng, lat])
-            .addTo(newMap);
-          markers.current.push(newMarker);
-          const newAddresses = [...addresses, { lat, lng }];
-          if (onAddressesChange) {
-            onAddressesChange(newAddresses);
-          }
-        });
-      }
+            if (addresses.length >= 3) {
+              alert("Solo se permiten 3 oficinas máximo.");
+              return;
+            }
+
+            const { lng, lat } = e.lngLat;
+            const newAddresses = [...addresses, { lat, lng }];
+
+            console.log("=== CREANDO NUEVO ARRAY ===");
+  console.log("addresses actual:", addresses);
+  console.log("nueva coordenada:", { lat, lng });
+  console.log("array resultante:", newAddresses);
+
+            if (onAddressesChange) {
+              onAddressesChange(newAddresses);
+            }
+          };
+
+          newMap.on("click", clickHandler);
+        }
+      });
 
       return () => {
-        if (newMap) newMap.remove();
+        if (mapRef.current) {
+          mapRef.current.remove();
+          mapRef.current = null;
+        }
       };
     } catch (error) {
       console.error("Error al inicializar el mapa:", error);
     }
-  }, []);
+  }, []); //
 
   useEffect(() => {
     if (!map) return;
@@ -85,7 +101,7 @@ const MapComponent = ({
       // Añadir nuevos marcadores
       addresses.forEach((coord) => {
         if (coord && coord.lat !== undefined && coord.lng !== undefined) {
-          const marker = new maptilersdk.Marker({ color: "#F5D819" })
+          const marker = new maptilersdk.Marker({ color: colorMarker })
             .setLngLat([coord.lng, coord.lat])
             .addTo(map);
           markers.current.push(marker);
@@ -94,7 +110,7 @@ const MapComponent = ({
     } catch (error) {
       console.error("Error al agregar marcadores:", error);
     }
-  }, [map, addresses]);
+  }, [map, addresses]); 
 
   return (
     <div className="w-full h-96 rounded-lg overflow-hidden border border-gray-200">
